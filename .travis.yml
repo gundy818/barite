@@ -1,29 +1,15 @@
 
-matrix:
-include:
-  - language: crystal
-    crystal:
-      - latest
-    script:
-      - crystal spec
+dist: xenial
 
-  - language: crystal
-    crystal:
-      - nightly
-    script:
-      - crystal spec
+language: crystal
 
-  - language: bash
-    services:
-      - docker
-    script:
-      - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 shards install
-      - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 crystal spec
+crystal:
+  - latest
+  - nightly
+  - 0.35.1
+  - 1.0.0
 
-  - language: bash
-    services:
-      - docker
-    script:
-      - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 shards install
-      - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal spec
+script:
+  - shards install
+  - crystal spec
 
