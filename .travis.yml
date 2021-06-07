@@ -11,13 +11,34 @@ jobs:
     dist: trusty
     services: docker
     script:
+    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 crystal version
     - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 crystal spec
+
   - language: shell
     os: linux
     dist: trusty
     services: docker
     script:
+    - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal version
     - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal spec
+
+  - language: shell
+    os: linux
+    dist: trusty
+    services: docker
+    script:
+    - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal version
+    - docker run -v $PWD:/src -w /src crystallang/crystal:latest shards install
+    - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal spec
+
+  - language: shell
+    os: linux
+    dist: trusty
+    services: docker
+    script:
+    - docker run -v $PWD:/src -w /src crystallang/crystal:nightly crystal version
+    - docker run -v $PWD:/src -w /src crystallang/crystal:nightly shards install
+    - docker run -v $PWD:/src -w /src crystallang/crystal:nightly crystal spec
 
