@@ -48,3 +48,13 @@ jobs:
     - docker run -v $PWD:/src -w /src crystallang/crystal:nightly shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:nightly crystal spec
 
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  keep_history: true
+  local_dir: docs
+  target_branch: gh-pages
+  on:
+    branch: finalise
+
