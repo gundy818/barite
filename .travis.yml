@@ -1,23 +1,23 @@
+---
+
+dist: xenial
+anguage: shell
+os: linux
 
 jobs:
   include:
-  - language: bash
+  - language: shell
     os: linux
     dist: trusty
     services: docker
     script:
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.31.1 crystal spec
-  - language: bash
+    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 shards install
+    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 crystal spec
+  - language: shell
     os: linux
     dist: trusty
     services: docker
     script:
+    - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal spec
-
-
-  #crystal:
-  #- latest
-  #- nightly
-  #- 0.35.1
-  #- 1.0.0
 
