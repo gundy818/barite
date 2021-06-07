@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 0.36.1">
+<meta name="crystal_docs.project_version" content="HEAD">
+<meta name="crystal_docs.project_name" content="barite">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="barite">
+  <title>barite HEAD</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          barite
+        </a>
+      </h1>
+
+      <span class="project-version">
+        HEAD
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent " data-id="barite/Barite" data-name="barite">
+      <a href="Barite.html">Barite</a>
+      
+        <ul>
+  
+  <li class=" " data-id="barite/Barite/AuthenticationException" data-name="barite::authenticationexception">
+      <a href="Barite/AuthenticationException.html">AuthenticationException</a>
+      
+    </li>
+  
+  <li class=" " data-id="barite/Barite/B2" data-name="barite::b2">
+      <a href="Barite/B2.html">B2</a>
+      
+    </li>
+  
+  <li class=" " data-id="barite/Barite/B2File" data-name="barite::b2file">
+      <a href="Barite/B2File.html">B2File</a>
+      
+    </li>
+  
+  <li class=" " data-id="barite/Barite/Exception" data-name="barite::exception">
+      <a href="Barite/Exception.html">Exception</a>
+      
+    </li>
+  
+  <li class=" " data-id="barite/Barite/NotFoundException" data-name="barite::notfoundexception">
+      <a href="Barite/NotFoundException.html">NotFoundException</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<p>Barite is a library to access the Backblaze B2 API.</p>
+
+<p>It is far from complete, but will have functions added as I need them.
+Contributions are welcome if you need a feature that isn't covered.</p>
+
+<p>It currently supports enough to be able to transfer individual files to
+and from B2 buckets.</p>
+
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+
+<ol><li>Add the dependency to your <code>shard.yml</code>:</li></ol>
+
+<p><code></code>`yaml
+   dependencies:</p>
+
+<pre><code class="language-crystal"> barite:
+   github: gundy818/barite</code></pre>
+
+<p><code></code>`</p>
+
+<ol><li>Run <code>shards install</code></li></ol>
+
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;barite&quot;</span>
+
+<span class="c"># Initialise the API.</span>
+b2 <span class="o">=</span> <span class="t">Barite</span><span class="t">::</span><span class="t">B2</span>.<span class="k">new</span>(<span class="s">&quot;my key id&quot;</span>, <span class="s">&quot;my key&quot;</span>)
+
+<span class="c"># Define a file in a specific bucket.</span>
+b2file <span class="o">=</span> b2.file(<span class="s">&quot;bucket_name&quot;</span>, <span class="s">&quot;the/file.txt&quot;</span>)
+
+<span class="c"># Upload the file from a local copy.</span>
+b2file.upload(<span class="s">&quot;/path/to/local/file.txt&quot;</span>)
+
+<span class="c"># Download the file to a local copy.</span>
+b2file.download(<span class="s">&quot;/where/to/put/the/download/file.txt&quot;</span>)</code></pre>
+
+<p>If there are exceptions, they'll probably be
+'Barite::Exception' subclasses. The most likely ones are
+'Barite::Exception::AuthenticationException' if there is a problem with
+your key, or a 'Barite::Exception::NotFoundException' if something you
+were trying to access couldn't be found. Hopefully the accompanying
+message will help you understand the problem.</p>
+
+<h2><a id="development" class="anchor" href="#development">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Development</h2>
+
+<p>There are no special requirements. There are no real tests at the
+moment, as I'm figuring out the best way to do this against the actual
+API, or by mocking it somehow. Suggestions are welcome!</p>
+
+<p>I will be adding functionality to be able to remove files and work with
+file versions, and also to set life cycle rules to automatically remove
+old versions.</p>
+
+<h2><a id="contributing" class="anchor" href="#contributing">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributing</h2>
+
+<ol><li>Fork it (&lt;https://github.com/gundy818/barite/fork>)</li><li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li><li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li><li>Push to the branch (<code>git push origin my-new-feature</code>)</li><li>Create a new Pull Request</li></ol>
+
+<h2><a id="contributors" class="anchor" href="#contributors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributors</h2>
+
+<ul><li><a href="https://github.com/gundy818">darryl</a> - creator and maintainer</li></ul>
+
+<p>&lt;!--- vim: textwidth=88
+ --></p>
+
+
+</div>
+</body>
+</html>
