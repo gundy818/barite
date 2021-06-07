@@ -5,11 +5,15 @@ version: 0.1.0
 authors:
   - darryl <gundy@snakegully.net>
 
-crystal: 1.0.0
+    # crystal: 1.0.0
 
 license: MIT
 
 dependencies:
   crest:
     github: mamantoha/crest
+
+development_dependencies:
+  minitest:
+    github: ysbaddaden/minitest.cr
 
