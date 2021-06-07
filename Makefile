@@ -10,3 +10,6 @@ all:
 check:
 	$(CRYSTAL) $(CRYSTALFLAGS) spec
 
+doc:
+	$(CRYSTAL) $(CRYSTALFLAGS) doc
+
