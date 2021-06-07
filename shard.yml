@@ -12,6 +12,4 @@ license: MIT
 dependencies:
   crest:
     github: mamantoha/crest
-  toml-config:
-    github: maiha/toml-config.cr
 
