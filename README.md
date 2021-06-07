@@ -1,8 +1,11 @@
 
-barite is a library to access the backblaze b2 API.
+Barite is a library to access the Backblaze B2 API.
 
-It is far from complete, but will have functions added as I need them. Contributions are
-welcome if you need a feature that isn't covered.
+It is far from complete, but will have functions added as I need them.
+Contributions are welcome if you need a feature that isn't covered.
+
+It currently supports enough to be able to transfer individual files to
+and from B2 buckets.
 
 
 ## Installation
@@ -22,14 +25,37 @@ welcome if you need a feature that isn't covered.
 
 ```crystal
 require "barite"
+
+# Initialise the API.
+b2 = Barite::B2.new("my key id", "my key")
+
+# Define a file in a specific bucket.
+b2file = b2.file("bucket_name", "the/file.txt")
+
+# Upload the file from a local copy.
+b2file.upload("/path/to/local/file.txt")
+
+# Download the file to a local copy.
+b2file.download("/where/to/put/the/download/file.txt")
 ```
 
-TODO: Write usage instructions here
+If there are exceptions, they'll probably be
+'Barite::Exception' subclasses. The most likely ones are
+'Barite::Exception::AuthenticationException' if there is a problem with
+your key, or a 'Barite::Exception::NotFoundException' if something you
+were trying to access couldn't be found. Hopefully the accompanying
+message will help you understand the problem.
 
 
 ## Development
 
-TODO: Write development instructions here
+There are no special requirements. There are no real tests at the
+moment, as I'm figuring out the best way to do this against the actual
+API, or by mocking it somehow. Suggestions are welcome!
+
+I will be adding functionality to be able to remove files and work with
+file versions, and also to set life cycle rules to automatically remove
+old versions.
 
 
 ## Contributing
