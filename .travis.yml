@@ -1,7 +1,9 @@
 ---
 
+# These global ones don't seem to be used at all, but get warnings from
+# travis if they're not set.
 dist: xenial
-anguage: shell
+language: shell
 os: linux
 
 jobs:
