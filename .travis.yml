@@ -6,19 +6,19 @@ os: linux
 services: docker
 
 env:
-	# 0.35.0 is the lowest supported version
-	- CRVER=0.35.0
-	# 1.0.0 is the version I'm using for development
-	- CRVER=1.0.0
-	# make sure it works on latest
-	- CRVER=latest
-	# and the nightly builds for good measure
-	- CRVER=nightly
+# 0.35.0 is the lowest supported version
+- CRVER=0.35.0
+# 1.0.0 is the version I'm using for development
+- CRVER=1.0.0
+# make sure it works on latest
+- CRVER=latest
+# and the nightly builds for good measure
+- CRVER=nightly
 
 script:
- - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal version
- - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER shards install
- - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal spec
+- docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal version
+- docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER shards install
+- docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal spec
 
 before_deploy: docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal docs
 
