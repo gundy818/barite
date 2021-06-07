@@ -1,7 +1,12 @@
 
 name: barite
 
+description: |
+  A crystal language interface to the Backblaze B2 API.
+
 version: 0.1.0
+
+repository: "https://github.com/gundy818/barite"
 
 authors:
   - darryl <gundy@snakegully.net>
