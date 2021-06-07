@@ -23,6 +23,7 @@ module Barite
     @api_token : String?
     @api_url : String?
 
+    # Initialise with authentication keys.
     # The key_id and key are created from your Backblaze login. Ensure that this key has
     # the capabilities that you will need. For example the ability to read and/or write
     # files is the buckets that you'll be using.
@@ -49,21 +50,24 @@ module Barite
       @api_token = data["authorizationToken"].to_s
     end
 
-    # Retrieve the account_id. Caches result on first access.
+    # Retrieve the account_id.
+    # Caches result on first access.
     def account_id() : String
       authorize_account() if @account_id.nil?
 
       return @account_id.as(String)
     end
 
-    # Retrieve the API token. Caches the result on first access.
+    # Retrieve the API token.
+    # Caches the result on first access.
     def api_token() : String
       authorize_account() if @api_token.nil?
 
       return @api_token.as(String)
     end
 
-    # Retrieve the API URL. Caches result on first access.
+    # Retrieve the API URL.
+    # Caches result on first access.
     def api_url() : String
       authorize_account() if @api_url.nil?
 
@@ -153,7 +157,8 @@ module Barite
     def initialize(@b2 : Barite::B2, @bucket_name : String, @file_name : String)
     end
 
-    # Retrieve the bucket ID. Caches the result on first use.
+    # Retrieve the bucket ID.
+    # Caches the result on first use.
     def bucket_id() : String
       @bucket_id = @b2.get_bucket_id(@bucket_name) if @bucket_id.nil?
 
@@ -187,15 +192,17 @@ module Barite
       end
     end
 
-    # Retrieve the upload token for the bucket. Caches the result on first use.
-    # Upload tokens seem to be re-usable. So you only need to get it once.
+    # Retrieve the upload token for the bucket.
+    # Caches the result on first use.
+    # Upload tokens seem to be re-usable, so you only need to get it once.
     def upload_token() : String
       @upload_url, @upload_token = @b2.get_upload_url(bucket_id()) if @upload_token.nil?
 
       return @upload_token.as(String)
     end
 
-    # Retrieve the upload URL. Caches the result on first use.
+    # Retrieve the upload URL.
+    # Caches the result on first use.
     def upload_url() : String
       @upload_url, @upload_token = @b2.get_upload_url(bucket_id()) if @upload_url.nil?
 
