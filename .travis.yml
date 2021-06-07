@@ -1,15 +1,12 @@
 
-dist: xenial
+# os: linux
+# dist: xenial
 
 language: crystal
 
-crystal:
-  - latest
-  - nightly
-  - 0.35.1
-  - 1.0.0
-
-script:
-  - shards install
-  - crystal spec
+  #crystal:
+  #- latest
+  #- nightly
+  #- 0.35.1
+  #- 1.0.0
 
