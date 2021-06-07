@@ -8,15 +8,17 @@ os: linux
 
 jobs:
   include:
+  # 0.35.0 is the lowest supported version
   - language: shell
     os: linux
     dist: trusty
     services: docker
     script:
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 crystal version
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 shards install
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.1 crystal spec
+    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.0 crystal version
+    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.0 shards install
+    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.0 crystal spec
 
+  # 1.0.0 is the version I'm using for development
   - language: shell
     os: linux
     dist: trusty
@@ -26,6 +28,7 @@ jobs:
     - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal spec
 
+  # make sure it works on latest
   - language: shell
     os: linux
     dist: trusty
@@ -35,6 +38,7 @@ jobs:
     - docker run -v $PWD:/src -w /src crystallang/crystal:latest shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal spec
 
+  # and the nightly builds for good measure
   - language: shell
     os: linux
     dist: trusty

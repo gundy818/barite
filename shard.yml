@@ -1,3 +1,4 @@
+
 name: barite
 
 version: 0.1.0
@@ -5,15 +6,11 @@ version: 0.1.0
 authors:
   - darryl <gundy@snakegully.net>
 
-    # crystal: 1.0.0
-
 license: MIT
+
+crystal: ">= 0.35.0, < 2.0.0"
 
 dependencies:
   crest:
     github: mamantoha/crest
-
-development_dependencies:
-  minitest:
-    github: ysbaddaden/minitest.cr
 
