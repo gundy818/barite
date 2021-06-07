@@ -37,6 +37,7 @@ jobs:
     - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal version
     - docker run -v $PWD:/src -w /src crystallang/crystal:latest shards install
     - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal spec
+    - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal docs
 
   # and the nightly builds for good measure
   - language: shell
