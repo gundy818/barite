@@ -19,7 +19,7 @@ script:
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal version
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER shards install
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal spec
-- test "$CRVER" = "latest" && ( rm -fr docs ; docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal docs )
+- test "$CRVER" = "latest" && ( rm -fr docs ; docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal docs ) ; true
 
 
 deploy:
