@@ -29,8 +29,8 @@ deploy:
   keep_history: true
   local_dir: docs
   target_branch: gh-pages
-  verbose: true
+  # verbose: true
   on:
-    branch: finalise
+    branch: main
     condition: $CRVER = latest
 
