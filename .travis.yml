@@ -1,58 +1,31 @@
 ---
 
-# These global ones don't seem to be used at all, but get warnings from
-# travis if they're not set.
 dist: xenial
 language: shell
 os: linux
+services: docker
 
-jobs:
-  include:
-  # 0.35.0 is the lowest supported version
-  - language: shell
-    os: linux
-    dist: trusty
-    services: docker
-    script:
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.0 crystal version
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.0 shards install
-    - docker run -v $PWD:/src -w /src crystallang/crystal:0.35.0 crystal spec
+env:
+	# 0.35.0 is the lowest supported version
+	- CRVER=0.35.0
+	# 1.0.0 is the version I'm using for development
+	- CRVER=1.0.0
+	# make sure it works on latest
+	- CRVER=latest
+	# and the nightly builds for good measure
+	- CRVER=nightly
 
-  # 1.0.0 is the version I'm using for development
-  - language: shell
-    os: linux
-    dist: trusty
-    services: docker
-    script:
-    - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal version
-    - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 shards install
-    - docker run -v $PWD:/src -w /src crystallang/crystal:1.0.0 crystal spec
+script:
+ - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal version
+ - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER shards install
+ - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal spec
 
-  # make sure it works on latest
-  - language: shell
-    os: linux
-    dist: trusty
-    services: docker
-    script:
-    - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal version
-    - docker run -v $PWD:/src -w /src crystallang/crystal:latest shards install
-    - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal spec
-    - docker run -v $PWD:/src -w /src crystallang/crystal:latest crystal docs
-
-  # and the nightly builds for good measure
-  - language: shell
-    os: linux
-    dist: trusty
-    services: docker
-    script:
-    - docker run -v $PWD:/src -w /src crystallang/crystal:nightly crystal version
-    - docker run -v $PWD:/src -w /src crystallang/crystal:nightly shards install
-    - docker run -v $PWD:/src -w /src crystallang/crystal:nightly crystal spec
+before_deploy: docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal docs
 
 deploy:
   provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
+  cleanup: false
+  token: $GITHUB_TOKEN
   keep_history: true
   local_dir: docs
   target_branch: gh-pages
