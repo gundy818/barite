@@ -53,7 +53,7 @@ module Barite
     # Retrieve the account_id.
     # Caches result on first access.
     def account_id() : String
-      authorize_account() if @account_id.nil?
+      @account_id ||= authorize_account()
 
       return @account_id.as(String)
     end
@@ -61,7 +61,7 @@ module Barite
     # Retrieve the API token.
     # Caches the result on first access.
     def api_token() : String
-      authorize_account() if @api_token.nil?
+      @api_token ||= authorize_account()
 
       return @api_token.as(String)
     end
@@ -69,7 +69,7 @@ module Barite
     # Retrieve the API URL.
     # Caches result on first access.
     def api_url() : String
-      authorize_account() if @api_url.nil?
+      @api_url ||= authorize_account()
 
       return @api_url.as(String)
     end
@@ -160,7 +160,7 @@ module Barite
     # Retrieve the bucket ID.
     # Caches the result on first use.
     def bucket_id() : String
-      @bucket_id = @b2.get_bucket_id(@bucket_name) if @bucket_id.nil?
+      @bucket_id ||= @b2.get_bucket_id(@bucket_name)
 
       return @bucket_id.as(String)
     end
