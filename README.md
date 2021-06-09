@@ -53,8 +53,6 @@ There are no special requirements. There are no real tests at the
 moment, as I'm figuring out the best way to do this against the actual
 API, or by mocking it somehow. Suggestions are welcome!
 
-If you have 'make' available, the tests can be run locally with 'make check'.
-
 I will be adding functionality to be able to remove files and work with
 file versions, and also to set life cycle rules to automatically remove
 old versions.

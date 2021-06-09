@@ -1,6 +1,4 @@
 
-AMEBA	:= bin/ameba
-AMEBAFLAGS	:=
 
 CRYSTAL	:= crystal
 CRYSTALFLAGS	:=
@@ -9,16 +7,9 @@ CRYSTALFLAGS	:=
 all:
 	@echo Hi
 
-check_ameba:
-	$(AMEBA) $(AMEBAFLAGS)
-
-check_spec:
+check:
 	$(CRYSTAL) $(CRYSTALFLAGS) spec
-
-check:	check_ameba check_spec
 
 doc:
 	$(CRYSTAL) $(CRYSTALFLAGS) doc
-
-.PHONY:	check_ameba check_spec doc
 
