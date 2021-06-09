@@ -1,7 +1,7 @@
 #
 # TODO:
 # - Provide a way to set lifecycle rules to automatically delete old file versions.
-# 
+#
 require "./exception"
 require "crest"
 require "digest/sha1"
@@ -173,7 +173,7 @@ module Barite
     def download(local_file_path : String)
       # this needs to be percent encoded
       x_bz_file_name = @file_name
-    
+
       response = Crest.get(
         "#{@b2.api_url()}/file/#{@bucket_name}/#{x_bz_file_name}",
         headers: {
@@ -225,7 +225,6 @@ module Barite
       content_sha = Digest::SHA1.hexdigest(content)
       content_length = File.size(local_file_path)
       modified_time = File.info(local_file_path).modification_time.to_unix_ms
-      x_bz_server_side_encryption = "AES256"
 
       response = Crest.post(
         upload_url(),
