@@ -16,7 +16,7 @@ env:
 - CRVER=nightly
 
 script:
-- docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal version
+- docker run -v $PWD:/src -e BARITE_TEST_BUCKET=$BARITE_TEST_BUCKET -w /src crystallang/crystal:$CRVER crystal version
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER shards install
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER make check
 - test "$CRVER" = "latest" && ( rm -fr docs ; docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal docs ) ; true
