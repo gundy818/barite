@@ -18,10 +18,18 @@ module Barite
   class Exception < Exception
   end
 
+  # Badly formatted request.
+  class BadRequestException < Barite::Exception
+  end
+
   # Aomething went wrong with authentication.
   # The specific message will tell you more. It could be a problem with credentials, or
   # an error communicating with Backblazw.
   class AuthenticationException < Barite::Exception
+  end
+
+  # You are not authorised for this action
+  class NotAuthorisedException < Barite::Exception
   end
 
   # Something was not found.

@@ -19,6 +19,9 @@ module Barite
   # This also means that you wont know that your authentication is correct until you
   # make an access.
   class B2
+    getter key : String
+    getter key_id : String
+
     @account_id : String?
     @api_token : String?
     @api_url : String?
@@ -53,7 +56,7 @@ module Barite
     # Retrieve the account_id.
     # Caches result on first access.
     def account_id() : String
-      @account_id ||= authorize_account()
+      authorize_account() if @account_id.nil?
 
       return @account_id.as(String)
     end
@@ -61,7 +64,7 @@ module Barite
     # Retrieve the API token.
     # Caches the result on first access.
     def api_token() : String
-      @api_token ||= authorize_account()
+      authorize_account() if @api_token.nil?
 
       return @api_token.as(String)
     end
@@ -69,7 +72,7 @@ module Barite
     # Retrieve the API URL.
     # Caches result on first access.
     def api_url() : String
-      @api_url ||= authorize_account()
+      authorize_account() if @api_url.nil?
 
       return @api_url.as(String)
     end
@@ -83,7 +86,7 @@ module Barite
     def get_bucket_id(bucket_name)
       begin
         request = Crest::Request.new(:post,
-          "#{api_url}/b2api/v2/b2_list_buckets",
+          "#{api_url()}/b2api/v2/b2_list_buckets",
           headers: {
             "Authorization" => api_token(),
             "Content-Type" => "application/json"
@@ -95,7 +98,9 @@ module Barite
         )
         response = request.execute
       rescue ex : Crest::BadRequest
-        raise Barite::Exception.new("Error listing buckets: #{ex.response}")
+        raise Barite::BadRequestException.new("Error listing buckets: #{ex.response}")
+      rescue ex : Crest::Unauthorized
+        raise Barite::NotAuthorisedException.new("Not authorised for bucket #{bucket_name}: #{ex.response}")
       end
 
       data = JSON.parse(response.body)
