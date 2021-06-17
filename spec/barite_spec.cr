@@ -17,7 +17,7 @@ describe Barite do
   barite_key_id = ENV["BARITE_TEST_KEY_ID"]
 
   describe "initialisation" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
 
     it "works" do
       b2
@@ -37,7 +37,7 @@ describe Barite do
 
 
   describe "authorize_account" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
     b2.authorize_account
 
     it "initialises account_id" do
@@ -48,28 +48,28 @@ describe Barite do
   end
 
   describe "account_id" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
     it "is automatically initialised" do
       b2.account_id.should_not be_nil
     end
   end
 
   describe "api_token" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
     it "is automatically initialised" do
       b2.api_token.should_not be_nil
     end
   end
 
   describe "api_url" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
     it "is automatically initialised" do
       b2.api_url.should_not be_nil
     end
   end
 
   describe "get_bucket_id" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
 
     it "retrieves test bucket id" do
       b2.get_bucket_id(barite_bucket).should_not be_nil
@@ -82,7 +82,7 @@ describe Barite do
     end
   end
   describe "get_upload_url" do
-    b2 = Barite::B2.new(barite_key_id, barite_key)
+    b2 = Barite::B2::API.new(barite_key_id, barite_key)
     bucket_id = b2.get_bucket_id(barite_bucket)
 
     it "works on a genuine bucket id" do
