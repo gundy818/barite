@@ -27,7 +27,7 @@ and from B2 buckets.
 require "barite"
 
 # Initialise the API.
-b2 = Barite::B2.new("my key id", "my key")
+b2 = Barite::B2::API.new("my key id", "my key")
 
 # Define a file in a specific bucket.
 b2file = b2.file("bucket_name", "the/file.txt")
