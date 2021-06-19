@@ -22,26 +22,65 @@ module Barite
       getter key : String
       getter key_id : String
 
-      property account_id : String?
-      property api_token : String?
-      property api_url : String?
+      @account_id : String?
+      @api_token : String?
+      @api_url : String?
+
+      # The text_exception is for testing.
+      # If it is set, then any method that calls
+      # Backblaze will just raise this exception, rather than actually making the call.
+      property test_exception : ::Exception?
+
+      # The test_response is for debugging.
+      # If it is set, then and method that calls
+      # Backblaze will just return this response, rather than actually making the call.
+      property test_response : Crest::Response?
 
       # Initialise with authentication keys.
       # The key_id and key are created from your Backblaze login. Ensure that this key has
       # the capabilities that you will need. For example the ability to read and/or write
       # files is the buckets that you'll be using.
       def initialize(@key_id : String, @key : String)
+        @account_id = nil
+        @api_token = nil
+        @api_url = nil
+        @test_exception = nil
+        @test_exception = nil
+        @test_response = nil
+      end
+
+      # This does the raw API calls to Backblaze.
+      # It has a couple of features to aid testinf. See the description of the
+      # '@test_exception' and @test_response' variables.
+      # Returns a Crest::Response object.
+      def api_request(call : String) : Crest::Response?
+        @test_exception.try do |exc|
+          @test_exception = nil
+          raise exc
+        end
+
+        if @test_response.nil?
+          result = Crest::Request.get(
+            "https://api.backblazeb2.com/b2api/v2/#{call}",
+            user: @key_id,
+            password: @key
+          )
+          else
+            result = @test_response
+            @test_response = nil
+        end
+
+        return result
       end
 
       # Access backblaze to authenticate.
       # Initialises @account_id, @api_url and @api_token on success.
       def authorize_account()
         begin
-          result = Crest::Request.get(
-            "https://api.backblazeb2.com/b2api/v2/b2_authorize_account",
-            user: @key_id,
-            password: @key
-          )
+          result = api_request("b2_authorize_account")
+
+          # make sure it's not 'nil'
+          result = result.as(Crest::Response)
         rescue ex : Socket::Addrinfo::Error
           raise Barite::AuthenticationException.new("Error resolving name: #{ex.message}")
         end
@@ -56,25 +95,40 @@ module Barite
       # Retrieve the account_id.
       # Caches result on first access.
       def account_id() : String
-        authorize_account() if @account_id.nil?
+        @account_id.try { |id|  return id }
+
+        authorize_account()
 
         return @account_id.as(String)
+      end
+
+      def account_id=(@account_id)
       end
 
       # Retrieve the API token.
       # Caches the result on first access.
       def api_token() : String
-        authorize_account() if @api_token.nil?
+        @api_token.try { |tkn| return tkn }
+
+        authorize_account()
 
         return @api_token.as(String)
+      end
+
+      def api_token=(@api_token)
       end
 
       # Retrieve the API URL.
       # Caches result on first access.
       def api_url() : String
-        authorize_account() if @api_url.nil?
+        @api_url.try { |url|  return url }
+
+        authorize_account()
 
         return @api_url.as(String)
+      end
+
+      def api_url=(@api_url)
       end
 
       # Return a B2Bucket object referencing the named bucket.
