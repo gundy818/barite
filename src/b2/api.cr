@@ -50,10 +50,10 @@ module Barite
       end
 
       # This does the raw API calls to Backblaze.
-      # It has a couple of features to aid testinf. See the description of the
+      # It has a couple of features to aid testing. See the description of the
       # '@test_exception' and @test_response' variables.
       # Returns a Crest::Response object.
-      def api_request(call : String) : Crest::Response?
+      def api_get(call : String) : Crest::Response?
         @test_exception.try do |exc|
           @test_exception = nil
           raise exc
@@ -73,11 +73,29 @@ module Barite
         return result
       end
 
+      def api_post(call : String, headers, body) Crest::Response?
+        @test_exception.try do |exc|
+          @test_exception = nil
+          raise exc
+        end
+
+        @test_response.try do |resp|
+          @test_response = nil
+          return resp
+        end
+
+        request = Crest::Request.new(:post,
+                                     "#{api_url()}/b2api/v2/#{call}",
+                                     headers: headers,
+                                     form: body)
+        return request.execute
+      end
+
       # Access backblaze to authenticate.
       # Initialises @account_id, @api_url and @api_token on success.
       def authorize_account()
         begin
-          result = api_request("b2_authorize_account")
+          result = api_get("b2_authorize_account")
 
           # make sure it's not 'nil'
           result = result.as(Crest::Response)
@@ -115,6 +133,7 @@ module Barite
         return @api_token.as(String)
       end
 
+      # getter for @api_token.
       def api_token=(@api_token)
       end
 
@@ -128,12 +147,13 @@ module Barite
         return @api_url.as(String)
       end
 
+      # getter for @api_url.
       def api_url=(@api_url)
       end
 
-      # Return a B2Bucket object referencing the named bucket.
-      def file(bucket_name : String) : Barite::B2Bucket
-        return Barite::B2Bucket.new(self, bucket_name)
+      # Return a B2::Bucket object referencing the named bucket.
+      def bucket(bucket_name : String) : Barite::B2::Bucket
+        return Barite::B2::Bucket.new(self, bucket_name)
       end
 
       # Return a File object referencing the selected file in the named bucket.
@@ -142,20 +162,17 @@ module Barite
       end
 
       # Retrieve the bucket ID for a bucket name.
-      def get_bucket_id(bucket_name)
+      def get_bucket_id(bucket_name) : String?
         begin
-          request = Crest::Request.new(:post,
-            "#{api_url()}/b2api/v2/b2_list_buckets",
-            headers: {
-              "Authorization" => api_token(),
-              "Content-Type" => "application/json"
-            },
-            form: {
-              "accountId" => account_id(),
-              "bucketName" => bucket_name
-            }.to_json
-          )
-          response = request.execute
+          response = api_post("b2_list_buckets",
+                              headers: {
+                                "Authorization" => api_token(),
+                                 "Content-Type" => "application/json"
+                               },
+                               body: {
+                                 "accountId" => account_id(),
+                                 "bucketName" => bucket_name
+                               }.to_json)
         rescue ex : Crest::BadRequest
           raise Barite::BadRequestException.new("Error listing buckets: #{ex.response}")
         rescue ex : Crest::Unauthorized
@@ -163,34 +180,62 @@ module Barite
         end
 
         data = JSON.parse(response.body)
-        bucket = data["buckets"][0]
 
-        return bucket["bucketId"].to_s
+        case response.status_code
+        when 200
+          buckets = data["buckets"]
+          return nil if buckets.size < 1
+
+          bucket = buckets[0]
+          return bucket["bucketId"].to_s
+        when 400
+          code = data["code"]
+          message = data["message"]
+          raise Barite::BadRequestException.new("Bad request #{code}: #{message}")
+        when 401, 403
+          code = data["code"]
+          message = data["message"]
+          raise Barite::NotAuthorisedException.new("Not authorised #{code}: #{message}")
+        end
+
+        return nil
       end
 
       # Retrieve an upload URL for a specific bucket.
       # Raises a Barite::NotFoundException on error.
       def get_upload_url(bucket_id)
         begin
-          request = Crest::Request.new(:post,
-            "#{api_url}/b2api/v2/b2_get_upload_url",
+          response = api_post("b2_get_upload_url",
             headers: {
               "Authorization" => api_token(),
               "Content-Type" => "application/json"
             },
-            form: {
+            body: {
               "bucketId" => bucket_id
             }.to_json
           )
-          response = request.execute
         rescue ex : Crest::BadRequest
           raise Barite::NotFoundException.new("Error getting upload URL: #{ex.response}")
+        rescue ex : Crest::Unauthorized
+          raise Barite::NotAuthorisedException.new("Not authorised for bucket #{bucket_id}: #{ex.response}")
         end
 
         data = JSON.parse(response.body)
-        # puts("Upload is authorised.")
 
-        return data["uploadUrl"].to_s, data["authorizationToken"].to_s
+        case response.status_code
+        when 200
+          return data["uploadUrl"].to_s, data["authorizationToken"].to_s
+        when 400
+          code = data["code"]
+          message = data["message"]
+          raise Barite::BadRequestException.new("Bad request #{code}: #{message}")
+        when 401, 403
+          code = data["code"]
+          message = data["message"]
+          raise Barite::NotAuthorisedException.new("Not authorised #{code}: #{message}")
+        else
+          puts("XXX status code: #{response.status_code}")
+        end
       end
     end
   end

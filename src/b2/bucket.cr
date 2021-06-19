@@ -24,7 +24,7 @@ module Barite
       @bucket_id : String?
 
       # Create a reference for the named bucket.
-      def initialize(@b2 : Barite::B2, @bucket_name : String)
+      def initialize(@b2 : Barite::B2::API, @bucket_name : String)
       end
 
       # Retrieve the bucket ID.

@@ -33,7 +33,7 @@ module Barite
       # Note that B2 filenames are strings but they can include a path, such as "abc/def".
       # Some tools will interpret this as a file called 'def' in a folder 'abc', and it is
       # OK to think of it like this, but the 'abc/' is really just part of the filename.
-      def initialize(@b2 : Barite::B2, @bucket_name : String, @file_name : String)
+      def initialize(@b2 : Barite::B2::API, @bucket_name : String, @file_name : String)
       end
 
       # Retrieve the bucket ID.
