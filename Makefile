@@ -19,7 +19,7 @@ functional_tests:
 
 unit_tests:
 	@echo "Unit tests"
-	$(CRYSTAL) $(CRYSTALFLAGS) spec spec/unit/*cr
+	$(CRYSTAL) $(CRYSTALFLAGS) spec --error-trace spec/unit/*cr
 
 # static tests are all local, they don't touch Backblaze, so should be cheap and fast.
 static_tests:	check_ameba unit_tests
