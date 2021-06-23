@@ -15,6 +15,12 @@ env:
 # and the nightly builds for good measure
 - CRVER=nightly
 
+
+# allow the nightly builds to fail because they sometimes do for temporary issues.
+jobs:
+  allow_failures:
+    - env: CRVER=nightly
+
 script:
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER crystal --version
 - docker run -v $PWD:/src -w /src crystallang/crystal:$CRVER shards install
