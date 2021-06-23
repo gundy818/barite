@@ -25,6 +25,7 @@ module Barite
 
       # Create a reference for the named bucket.
       def initialize(@b2 : Barite::B2::API, @bucket_name : String)
+        @bucket_id = nil
       end
 
       # Retrieve the bucket ID.
@@ -33,6 +34,9 @@ module Barite
         @bucket_id ||= @b2.get_bucket_id(@bucket_name)
 
         return @bucket_id.as(String)
+      end
+
+      def bucket_id=(@bucket_id)
       end
 
       # Updates the bucket properties passed.
@@ -44,18 +48,18 @@ module Barite
           "lifecycleRules" => lifecycle_rules.map {|r| r.to_hash()}
         }
 
-        response = Crest.post(
-          @b2.api_url(),
-          headers: {
-            "Authorization" => @b2.api_token(),
-          },
-          form: content.to_json
-        )
-
-        data = JSON.parse(response.body)
-        data["lifecycleRules"].each do |r|
-          puts "XXX rule: #{r}"
+        begin
+          response = @b2.api_post("b2_update_bucket",
+                                  headers: {
+                                    "Authorization" => @b2.api_token(),
+                                  },
+                                  body: content.to_json)
+        rescue ex : Crest::Unauthorized
+          raise Barite::NotAuthorisedException.new("Error updating bucket: #{ex.message}")
         end
+
+        # data = JSON.parse(response.body)
+        return response
       end
     end
   end

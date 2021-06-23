@@ -35,7 +35,6 @@ describe Barite do
     end
   end
 
-
   describe "authorize_account" do
     b2 = Barite::B2::API.new(barite_key_id, barite_key)
     b2.authorize_account
